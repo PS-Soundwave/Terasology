@@ -16,10 +16,9 @@
 
 package org.terasology.math;
 
-import java.math.RoundingMode;
-
+import org.joml.RoundingMode;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.world.chunks.ChunkConstants;
 
 /**
@@ -76,7 +75,7 @@ public final class ChunkMath {
     }
 
     public static Vector3i calcChunkPos(Vector3f pos) {
-        return calcChunkPos(new Vector3i(pos, RoundingMode.HALF_UP));
+        return calcChunkPos(new Vector3i(JomlUtil.from(pos), RoundingMode.HALF_UP));
     }
 
     public static Vector3i calcChunkPos(Vector3i pos) {
@@ -181,7 +180,7 @@ public final class ChunkMath {
     // TODO: This doesn't belong in this class, move it.
     public static Side getSecondaryPlacementDirection(Vector3f direction, Vector3f normal) {
         Side surfaceDir = Side.inDirection(normal);
-        Vector3f attachDir = surfaceDir.reverse().getVector3i().toVector3f();
+        Vector3f attachDir = JomlUtil.vector3f(surfaceDir.reverse().getVector3i());
         Vector3f rawDirection = new Vector3f(direction);
         float dot = rawDirection.dot(attachDir);
         rawDirection.sub(new Vector3f(dot * attachDir.x, dot * attachDir.y, dot * attachDir.z));
@@ -289,5 +288,13 @@ public final class ChunkMath {
      */
     public static boolean blockInChunk(Vector3i blockWorldPos, Vector3i chunkWorldPos) {
         return calcChunkPos(blockWorldPos).equals(chunkWorldPos);
+    }
+
+    public static int calculate3DArrayIndex(Vector3i pos, Vector3i size) {
+        return calculate3DArrayIndex(pos.x(), pos.y(), pos.z(), size);
+    }
+
+    public static int calculate3DArrayIndex(int x, int y, int z, Vector3i size) {
+        return x + size.x() * (z + size.z() * y);
     }
 }

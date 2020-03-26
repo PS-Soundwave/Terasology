@@ -16,8 +16,7 @@
 package org.terasology.world.chunks;
 
 import org.terasology.math.Region3i;
-import org.terasology.math.geom.BaseVector3i;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.module.sandbox.API;
 import org.terasology.world.block.Block;
 
@@ -46,7 +45,7 @@ public interface CoreChunk {
      * @param pos Position of the block relative to corner of the chunk
      * @return Block at given position
      */
-    Block getBlock(BaseVector3i pos);
+    Block getBlock(Vector3i pos);
 
     /**
      * Returns block at given position relative to the chunk.
@@ -76,7 +75,7 @@ public interface CoreChunk {
      * @param block Block to set block at given position to
      * @return Old Block at given position
      */
-    Block setBlock(BaseVector3i pos, Block block);
+    Block setBlock(Vector3i pos, Block block);
 
     /**
      * Sets one of the per-block custom data values at a given position relative to the chunk.
@@ -100,7 +99,7 @@ public interface CoreChunk {
      * @param pos   Position of the block relative to the corner of the chunk
      * @param value New value to set the block to
      */
-    void setExtraData(int index, BaseVector3i pos, int value);
+    void setExtraData(int index, Vector3i pos, int value);
     
     /**
      * Returns one of the per-block custom data values at a given position relative to the chunk.
@@ -120,7 +119,7 @@ public interface CoreChunk {
      * @param pos   Position of the block relative to the corner of the chunk
      * @return Selected extra data value at the given location
      */
-    int getExtraData(int index, BaseVector3i pos);
+    int getExtraData(int index, Vector3i pos);
 
     /**
      * Returns offset of this chunk to the world center (0:0:0), with one unit being one chunk.
@@ -156,7 +155,7 @@ public interface CoreChunk {
      * @param blockPos Position in this chunk you want to transform
      * @return Transformed position
      */
-    Vector3i chunkToWorldPosition(BaseVector3i blockPos);
+    Vector3i chunkToWorldPosition(Vector3i blockPos);
 
     /**
      * Returns position in this chunk transformed to world coordinates.

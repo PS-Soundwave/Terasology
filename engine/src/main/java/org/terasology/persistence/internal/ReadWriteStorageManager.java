@@ -37,7 +37,7 @@ import org.terasology.game.Game;
 import org.terasology.game.GameManifest;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.module.Module;
 import org.terasology.module.ModuleEnvironment;
 import org.terasology.monitoring.PerformanceMonitor;

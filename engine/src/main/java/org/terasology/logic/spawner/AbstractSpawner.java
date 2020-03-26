@@ -22,7 +22,7 @@ import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.SpiralIterable;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.World;
 import org.terasology.world.generation.facets.SeaLevelFacet;

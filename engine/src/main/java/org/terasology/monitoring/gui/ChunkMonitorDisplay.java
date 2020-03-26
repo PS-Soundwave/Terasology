@@ -20,11 +20,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.joml.RoundingMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.ChunkMath;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
+import org.terasology.math.JomlUtil;
 import org.terasology.monitoring.ThreadActivity;
 import org.terasology.monitoring.ThreadMonitor;
 import org.terasology.monitoring.chunk.ChunkMonitor;
@@ -162,7 +164,7 @@ public class ChunkMonitorDisplay extends JPanel {
     private Vector3i calcPlayerChunkPos() {
         final LocalPlayer p = CoreRegistry.get(LocalPlayer.class);
         if (p != null) {
-            return ChunkMath.calcChunkPos(new Vector3i(p.getPosition()));
+            return ChunkMath.calcChunkPos(new Vector3i(JomlUtil.from(p.getPosition()), RoundingMode.FLOOR));
         }
         return null;
     }

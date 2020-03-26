@@ -22,7 +22,7 @@ import org.terasology.input.cameraTarget.CameraTargetSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.ChunkMath;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.monitoring.PerformanceMonitor;
 import org.terasology.persistence.StorageManager;
 import org.terasology.registry.In;

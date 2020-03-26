@@ -31,7 +31,7 @@ import org.terasology.math.geom.Quat4f;
 import org.terasology.math.geom.SpiralIterable;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.physics.components.shapes.BoxShapeComponent;
 import org.terasology.physics.components.shapes.CapsuleShapeComponent;
 import org.terasology.physics.components.shapes.CylinderShapeComponent;
@@ -134,7 +134,7 @@ public class PlayerFactory {
             Vector3i testPos = new Vector3i(pos.getX(), targetBlockY, pos.getY());
             Vector3i spawnPos = findOpenVerticalPosition(testPos, entityHeight);
             if (spawnPos != null) {
-                return Optional.of(new Vector3f(spawnPos.getX(), spawnPos.getY() + entityHeight, spawnPos.getZ()));
+                return Optional.of(new Vector3f(spawnPos.x(), spawnPos.y() + entityHeight, spawnPos.z()));
             }
         }
         return Optional.empty();
@@ -160,7 +160,7 @@ public class PlayerFactory {
                 }
 
                 if (consecutiveAirBlocks >= height) {
-                    newSpawnPos.subY(consecutiveAirBlocks);
+                    newSpawnPos.sub(0, consecutiveAirBlocks, 0);
                     return newSpawnPos;
                 }
                 newSpawnPos.add(0, 1, 0);

@@ -17,7 +17,7 @@ package org.terasology.persistence.internal;
 
 import org.terasology.engine.TerasologyConstants;
 import org.terasology.game.GameManifest;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 
 import java.nio.file.Path;
 

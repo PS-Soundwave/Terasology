@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.joml.RoundingMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.context.Context;
@@ -42,9 +43,10 @@ import org.terasology.entitySystem.metadata.ComponentMetadata;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.location.LocationComponent;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.monitoring.PerformanceMonitor;
 import org.terasology.network.NetworkComponent;
 import org.terasology.reflection.metadata.FieldMetadata;
@@ -54,7 +56,6 @@ import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
 import org.terasology.world.block.regions.BlockRegionComponent;
 
-import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -213,7 +214,7 @@ public class EntityAwareWorldProvider extends AbstractWorldProviderDecorator imp
 
     @Override
     public EntityRef getBlockEntityAt(Vector3f position) {
-        Vector3i pos = new Vector3i(position, RoundingMode.HALF_UP);
+        Vector3i pos = new Vector3i(JomlUtil.from(position), RoundingMode.HALF_UP);
         return getBlockEntityAt(pos);
     }
 
@@ -325,7 +326,7 @@ public class EntityAwareWorldProvider extends AbstractWorldProviderDecorator imp
 
     private EntityRef createBlockEntity(Vector3i blockPosition, Block block) {
         EntityBuilder builder = entityManager.newBuilder(block.getPrefab().orElse(null));
-        builder.addComponent(new LocationComponent(blockPosition.toVector3f()));
+        builder.addComponent(new LocationComponent(JomlUtil.vector3f(blockPosition)));
         builder.addComponent(new BlockComponent(block, blockPosition));
         boolean isTemporary = isTemporaryBlock(builder, block);
         if (!isTemporary && !builder.hasComponent(NetworkComponent.class)) {

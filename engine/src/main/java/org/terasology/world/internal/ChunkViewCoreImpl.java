@@ -19,9 +19,10 @@ package org.terasology.world.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.ChunkMath;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.Region3i;
 import org.terasology.math.TeraMath;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.world.block.Block;
 import org.terasology.world.chunks.Chunk;
 import org.terasology.world.chunks.ChunkConstants;
@@ -232,7 +233,7 @@ public class ChunkViewCoreImpl implements ChunkViewCore {
     }
 
     protected int relChunkIndex(int x, int y, int z) {
-        return TeraMath.calculate3DArrayIndex(ChunkMath.calcChunkPosX(x, chunkPower.x) + offset.x,
+        return ChunkMath.calculate3DArrayIndex(ChunkMath.calcChunkPosX(x, chunkPower.x) + offset.x,
                 ChunkMath.calcChunkPosY(y, chunkPower.y) + offset.y,
                 ChunkMath.calcChunkPosZ(z, chunkPower.z) + offset.z, chunkRegion.size());
     }

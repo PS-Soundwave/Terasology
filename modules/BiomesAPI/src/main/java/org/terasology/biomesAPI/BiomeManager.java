@@ -16,6 +16,7 @@
 package org.terasology.biomesAPI;
 
 import com.google.common.base.Preconditions;
+import org.joml.RoundingMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -24,8 +25,8 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.players.PlayerCharacterComponent;
-import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.terasology.math.JomlUtil;
+import org.joml.Vector3i;
 import org.terasology.physics.events.MovedEvent;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
@@ -35,7 +36,6 @@ import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.chunks.blockdata.ExtraDataSystem;
 import org.terasology.world.chunks.blockdata.RegisterExtraData;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,8 +117,8 @@ public class BiomeManager extends BaseComponentSystem implements BiomeRegistry {
      */
     @ReceiveEvent(components = PlayerCharacterComponent.class)
     public void checkBiomeChangeEvent(MovedEvent event, EntityRef entity) {
-        final Vector3i newPosition = new Vector3i(event.getPosition());
-        final Vector3i oldPosition = new Vector3i(new Vector3f(event.getPosition()).sub(event.getDelta()));
+        final Vector3i newPosition = new Vector3i(JomlUtil.from(event.getPosition()), RoundingMode.FLOOR);
+        final Vector3i oldPosition = new Vector3i(JomlUtil.from(event.getPosition().sub(event.getDelta())), RoundingMode.FLOOR);
         if (!newPosition.equals(oldPosition)) {
             final Optional<Biome> newBiomeOptional = getBiome(newPosition);
             final Optional<Biome> oldBiomeOptional = getBiome(oldPosition);

@@ -21,7 +21,6 @@ import org.terasology.config.Config;
 import org.terasology.config.RenderingConfig;
 import org.terasology.context.Context;
 import org.terasology.engine.SimpleUri;
-import org.terasology.math.JomlUtil;
 import org.terasology.math.TeraMath;
 import org.terasology.monitoring.PerformanceMonitor;
 import org.terasology.rendering.backdrop.BackdropProvider;
@@ -168,7 +167,7 @@ public class ShadowMapNode extends ConditionDependentNode implements PropertyCha
 
                 if (chunk.hasMesh()) {
                     final ChunkMesh chunkMesh = chunk.getMesh();
-                    final Vector3f chunkPosition = new Vector3f(JomlUtil.from(chunk.getPosition()));
+                    final Vector3f chunkPosition = new Vector3f(chunk.getPosition());
 
                     numberOfRenderedTriangles += chunkMesh.render(OPAQUE, chunkPosition, cameraPosition);
 

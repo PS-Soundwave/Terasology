@@ -17,11 +17,13 @@ package org.terasology.rendering.world;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
+import org.joml.RoundingMode;
+import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.ChunkMath;
-import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
+import org.terasology.math.JomlUtil;
 import org.terasology.monitoring.chunk.ChunkMonitor;
 import org.terasology.rendering.primitives.ChunkMesh;
 import org.terasology.rendering.primitives.ChunkTessellator;
@@ -97,7 +99,7 @@ public final class ChunkMeshUpdateManager {
      * immediately.
      */
     public void setCameraPosition(Vector3f cameraPosition) {
-        Vector3i chunkPos = ChunkMath.calcChunkPos(cameraPosition);
+        Vector3i chunkPos = ChunkMath.calcChunkPos(JomlUtil.from(cameraPosition));
         cameraChunkPosX = chunkPos.x;
         cameraChunkPosY = chunkPos.y;
         cameraChunkPosZ = chunkPos.z;
@@ -188,17 +190,17 @@ public final class ChunkMeshUpdateManager {
     private class ChunkUpdaterComparator implements Comparator<ChunkTask> {
         @Override
         public int compare(ChunkTask o1, ChunkTask o2) {
-            return score(o1) - score(o2);
+            return (int)Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, score(o1) - score(o2)));
         }
 
-        private int score(ChunkTask task) {
+        private long score(ChunkTask task) {
             if (task.isTerminateSignal()) {
                 return -1;
             }
-            return distFromRegion(task.getPosition(), new Vector3i(cameraChunkPosX, cameraChunkPosY, cameraChunkPosZ));
+            return distFromRegion(task.getPosition(), new Vector3i(new Vector3f(cameraChunkPosX, cameraChunkPosY, cameraChunkPosZ), RoundingMode.FLOOR));
         }
 
-        private int distFromRegion(Vector3i pos, Vector3i regionCenter) {
+        private long distFromRegion(Vector3i pos, Vector3i regionCenter) {
             return pos.gridDistance(regionCenter);
         }
     }

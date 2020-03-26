@@ -15,6 +15,7 @@
  */
 package org.terasology.logic.characters;
 
+import org.joml.RoundingMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -25,20 +26,19 @@ import org.terasology.logic.characters.events.OnEnterBlockEvent;
 import org.terasology.logic.characters.events.SwimStrokeEvent;
 import org.terasology.logic.characters.events.VerticalCollisionEvent;
 import org.terasology.logic.location.LocationComponent;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.TeraMath;
 import org.terasology.math.Vector3fUtil;
 import org.terasology.math.geom.ImmutableVector3f;
 import org.terasology.math.geom.Quat4f;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.physics.engine.CharacterCollider;
 import org.terasology.physics.engine.PhysicsEngine;
 import org.terasology.physics.engine.SweepCallback;
 import org.terasology.physics.events.MovedEvent;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.block.Block;
-
-import java.math.RoundingMode;
 
 /**
  * Calculates character movement using a physics-engine provided CharacterCollider.
@@ -104,8 +104,8 @@ public class KinematicCharacterMover implements CharacterMover {
 
             if (input.isFirstRun()) {
                 checkBlockEntry(entity,
-                        new Vector3i(initial.getPosition(), RoundingMode.HALF_UP),
-                        new Vector3i(result.getPosition(), RoundingMode.HALF_UP),
+                        new Vector3i(JomlUtil.from(initial.getPosition()), RoundingMode.HALF_UP),
+                        new Vector3i(JomlUtil.from(result.getPosition()), RoundingMode.HALF_UP),
                         characterMovementComponent.height);
             }
             if (result.getMode() != MovementMode.GHOSTING && result.getMode() != MovementMode.NONE) {
@@ -250,8 +250,8 @@ public class KinematicCharacterMover implements CharacterMover {
             Block block = worldProvider.getBlock(side);
             if (block.isClimbable()) {
                 //If any of our sides are near a climbable block, check if we are near to the side
-                Vector3i myPos = new Vector3i(worldPos, RoundingMode.HALF_UP);
-                Vector3i climbBlockPos = new Vector3i(side, RoundingMode.HALF_UP);
+                Vector3i myPos = new Vector3i(JomlUtil.from(worldPos), RoundingMode.HALF_UP);
+                Vector3i climbBlockPos = new Vector3i(JomlUtil.from(side), RoundingMode.HALF_UP);
                 Vector3i dir = new Vector3i(block.getDirection().getVector3i());
                 float currentDistance = 10f;
 
@@ -636,7 +636,7 @@ public class KinematicCharacterMover implements CharacterMover {
         distanceMoved.sub(state.getPosition());
         state.getPosition().set(moveResult.getFinalPosition());
         if (input.isFirstRun() && distanceMoved.length() > 0) {
-            entity.send(new MovedEvent(new ImmutableVector3f(distanceMoved), new ImmutableVector3f(state.getPosition())));
+            entity.send(new MovedEvent(new Vector3f(distanceMoved), new Vector3f(state.getPosition())));
         }
 
         // Upon hitting solid ground, reset the number of jumps back to the maximum value.
@@ -754,7 +754,7 @@ public class KinematicCharacterMover implements CharacterMover {
         Vector3f tmp;
 
         Vector3i climbDir3i = state.getClimbDirection();
-        Vector3f climbDir3f = climbDir3i.toVector3f();
+        Vector3f climbDir3f = JomlUtil.vector3f(climbDir3i);
 
         Quat4f rotation = new Quat4f(TeraMath.DEG_TO_RAD * state.getYaw(), 0, 0);
         tmp = new Vector3f(0.0f, 0.0f, -1.0f);

@@ -31,11 +31,8 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.entity.EntityStore;
 import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.math.ChunkMath;
-import org.terasology.math.Region3i;
-import org.terasology.math.Side;
-import org.terasology.math.TeraMath;
-import org.terasology.math.geom.Vector3i;
+import org.terasology.math.*;
+import org.joml.Vector3i;
 import org.terasology.monitoring.PerformanceMonitor;
 import org.terasology.monitoring.chunk.ChunkMonitor;
 import org.terasology.persistence.ChunkStore;
@@ -89,7 +86,7 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalChunkProvider.class);
     private static final int UNLOAD_PER_FRAME = 64;
-    private static final Vector3i UNLOAD_LEEWAY = Vector3i.one();
+    private static final Vector3i UNLOAD_LEEWAY = new Vector3i(1, 1, 1);
 
     private StorageManager storageManager;
     private final EntityManager entityManager;
@@ -158,7 +155,7 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
     public ChunkViewCore getLocalView(Vector3i centerChunkPos) {
         Region3i region = Region3i.createFromCenterExtents(centerChunkPos, ChunkConstants.LOCAL_REGION_EXTENTS);
         if (getChunk(centerChunkPos) != null) {
-            return createWorldView(region, Vector3i.one());
+            return createWorldView(region, new Vector3i(1, 1, 1));
         }
         return null;
     }
@@ -186,7 +183,7 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
                 return null;
             }
             chunkPos.sub(region.minX(), region.minY(), region.minZ());
-            int index = TeraMath.calculate3DArrayIndex(chunkPos, region.size());
+            int index = ChunkMath.calculate3DArrayIndex(chunkPos, region.size());
             chunks[index] = chunk;
         }
         return new ChunkViewCoreImpl(chunks, region, offset, blockManager.getBlock(BlockManager.AIR_ID));
@@ -684,23 +681,23 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
 
         @Override
         public int compare(ChunkTask o1, ChunkTask o2) {
-            return score(o1) - score(o2);
+            return (int)Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, score(o1) - score(o2)));
         }
 
-        private int score(ChunkTask task) {
+        private long score(ChunkTask task) {
             if (task.isTerminateSignal()) {
                 return -1;
             }
             return score(task.getPosition());
         }
 
-        private int score(Vector3i chunk) {
-            int score = Integer.MAX_VALUE;
+        private long score(Vector3i chunk) {
+            long score = Long.MAX_VALUE;
 
             regionLock.readLock().lock();
             try {
                 for (ChunkRelevanceRegion region : regions.values()) {
-                    int dist = distFromRegion(chunk, region.getCenter());
+                    long dist = distFromRegion(chunk, region.getCenter());
                     if (dist < score) {
                         score = dist;
                     }
@@ -711,7 +708,7 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
             }
         }
 
-        private int distFromRegion(Vector3i pos, Vector3i regionCenter) {
+        private long distFromRegion(Vector3i pos, Vector3i regionCenter) {
             return pos.gridDistance(regionCenter);
         }
     }
@@ -720,16 +717,16 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
 
         @Override
         public int compare(ReadyChunkInfo o1, ReadyChunkInfo o2) {
-            return score(o2.getPos()) - score(o1.getPos());
+            return (int)Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, score(o2.getPos()) - score(o1.getPos())));
         }
 
-        private int score(Vector3i chunk) {
-            int score = Integer.MAX_VALUE;
+        private long score(Vector3i chunk) {
+            long score = Long.MAX_VALUE;
 
             regionLock.readLock().lock();
             try {
                 for (ChunkRelevanceRegion region : regions.values()) {
-                    int dist = distFromRegion(chunk, region.getCenter());
+                    long dist = distFromRegion(chunk, region.getCenter());
                     if (dist < score) {
                         score = dist;
                     }
@@ -740,7 +737,7 @@ public class LocalChunkProvider implements GeneratingChunkProvider {
             }
         }
 
-        private int distFromRegion(Vector3i pos, Vector3i regionCenter) {
+        private long distFromRegion(Vector3i pos, Vector3i regionCenter) {
             return pos.gridDistance(regionCenter);
         }
     }

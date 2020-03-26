@@ -30,7 +30,7 @@ import org.terasology.core.world.generator.trees.TreeGenerator;
 import org.terasology.core.world.generator.trees.Trees;
 import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.utilities.random.MersenneRandom;
 import org.terasology.utilities.random.Random;
@@ -128,7 +128,7 @@ public class TreeTests {
 
             Random random = new MersenneRandom(seed);
             BlockManager blockManagerLocal = CoreRegistry.get(BlockManager.class);
-            Vector3i relPos = chunk.chunkToWorldPosition(0, 0, 0).sub(pos).invert();
+            Vector3i relPos = chunk.chunkToWorldPosition(0, 0, 0).sub(pos).negate();
             treeGen.generate(blockManagerLocal, chunk, random, relPos.x, relPos.y, relPos.z);
         }
 

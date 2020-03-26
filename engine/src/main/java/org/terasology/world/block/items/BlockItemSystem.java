@@ -31,7 +31,7 @@ import org.terasology.math.AABB;
 import org.terasology.math.ChunkMath;
 import org.terasology.math.Side;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
+import org.joml.Vector3i;
 import org.terasology.network.NetworkSystem;
 import org.terasology.physics.Physics;
 import org.terasology.physics.StandardCollisionGroup;
